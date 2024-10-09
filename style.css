@@ -17,3 +17,26 @@
 
 @media (pointer:none), (pointer:coarse) {
 }
+
+body {
+    transform: rotate(90deg) translate(0, -100vw);
+    transform-origin: left top;
+    width: 100vh;
+    height: 100vw;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    -webkit-transform: rotate(90deg) translate(0, -100vw);
+    -moz-transform: rotate(90deg) translate(0, -100vw);
+    -ms-transform: rotate(90deg) translate(0, -100vw);
+    -o-transform: rotate(90deg) translate(0, -100vw);
+}
+
+@media (orientation: portrait) {
+    body {
+        transform: none !important;
+        width: 100vw;
+        height: 100vh;
+    }
+}
