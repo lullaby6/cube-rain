@@ -1,15 +1,15 @@
 const Cube = {
-    color: '#fff',
+    color: 'rgba(255, 255, 255, 1)',
     tags: ['cube'],
     border: {
         size: 1,
         color: '#000'
     },
-    size: {
-        min: 7.5,
-        max: 10
+    range: {
+        size: 12.5,
+        speed: 400
     },
-    speedRange: 500,
+    speed: 0,
 
     onLoad: current => {
         current.reset(current)
@@ -30,11 +30,9 @@ const Cube = {
     },
 
     reset: current => {
-        const size = randomIntFromInterval(current.scene.game.width/current.size.max, current.scene.game.width/current.size.min)
+        const size = randomIntFromInterval(current.scene.game.width/(current.range.size/2), current.scene.game.width/current.range.size)
 
-        const range = Math.abs(current.speedRange - (current.scene.score * 2))
-
-        const speed = randomIntFromInterval(current.scene.game.height/range, current.scene.game.height/(range/2))
+        const speed = randomIntFromInterval(current.scene.game.height/(current.range.speed/2), current.scene.game.height/current.range.speed)
 
         current.speed = speed
 
@@ -51,9 +49,13 @@ const Cube = {
 
         current.scene.score += 1
 
+        const maxScore = localStorage.getItem('maxScore') || 0
+
+        if (current.scene.score > maxScore) localStorage.setItem('maxScore', current.scene.score)
+
         const cubesLength = current.scene.getGameObjectsByTag('cube').length
 
-        const newCubesLength = Math.min(current.scene.maxCubes, parseInt(Math.max(1, current.scene.score / 5)))
+        const newCubesLength = Math.min(current.scene.maxCubes, parseInt(Math.max(1, current.scene.score / 10)))
 
         if (newCubesLength > cubesLength) {
             for (let i = 0; i < newCubesLength - cubesLength; i++) {
@@ -65,10 +67,13 @@ const Cube = {
 
 const MainScene = {
     score: 0,
-    maxCubes: 5,
+    initialCubes: 3,
+    maxCubes: 8,
 
     onLoad: current => {
-        current.instantGameObject(Cube)
+        for (let i = 0; i < current.initialCubes; i++) {
+            current.instantGameObject(Cube)
+        }
     },
 
     onUpdate: current => {

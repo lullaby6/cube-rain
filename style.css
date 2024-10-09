@@ -1,24 +1,8 @@
-/* @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
-    html {
-        transform: rotate(-90deg);
-        transform-origin: left top;
-        width: 100vh;
-        height: 100vw;
-        overflow-x: hidden;
-        position: absolute;
-        top: 100%;
-        left: 0;
-    }
-} */
-
-@media screen and (orientation:portrait) {
-
-}
-
 @media (pointer:none), (pointer:coarse) {
+
 }
 
-body {
+/* body {
     transform: rotate(90deg) translate(0, -100vw);
     transform-origin: left top;
     width: 100vh;
@@ -27,10 +11,6 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    -webkit-transform: rotate(90deg) translate(0, -100vw);
-    -moz-transform: rotate(90deg) translate(0, -100vw);
-    -ms-transform: rotate(90deg) translate(0, -100vw);
-    -o-transform: rotate(90deg) translate(0, -100vw);
 }
 
 @media (orientation: portrait) {
@@ -39,4 +19,4 @@ body {
         width: 100vw;
         height: 100vh;
     }
-}
+} */
