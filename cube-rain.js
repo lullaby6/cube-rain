@@ -1,9 +1,78 @@
+const Score = {
+    color: 'transparent',
+    gui: true,
+    z: 100,
+    text: {
+        value: '0',
+        color: '#09090b',
+        fontSize: 24,
+        font: 'monospace'
+    },
+
+    onLoad: current => {
+        current.width = current.text.width
+        current.x = current.scene.game.width/2 - (current.text.width/2)
+
+        current.height = current.text.fontSize
+        current.y = current.scene.game.height/15
+    }
+}
+
+const StartText = {
+    color: 'transparent',
+    gui: true,
+    z: 100,
+    text: {
+        value: 'Tap to start',
+        color: '#09090b',
+        fontSize: 24,
+        font: 'monospace',
+    },
+
+    onLoad: current => {
+        if (localStorage.hasOwnProperty('maxScore')) {
+            current.calcTextWidth()
+            // current.text.value += `Max Score: ${localStorage.getItem('maxScore')}`
+        }
+
+        current.height = current.text.fontSize
+        current.y = current.scene.game.height/2 - current.text.fontSize
+
+        current.width = current.text.width
+        current.x = current.scene.game.width/2 - (current.text.width/2)
+    },
+}
+
+const MaxScoreText = {
+    color: 'transparent',
+    gui: true,
+    z: 100,
+    text: {
+        color: '#09090b',
+        fontSize: 16,
+        font: 'monospace',
+    },
+
+    onLoad: current => {
+        if (localStorage.hasOwnProperty('maxScore')) {
+            current.text.value = `Max Score: ${localStorage.getItem('maxScore')}`
+            current.calcTextWidth()
+        }
+
+        current.height = current.text.fontSize
+        current.y = current.scene.game.height/2 + (current.text.fontSize/4)
+
+        current.width = current.text.width
+        current.x = current.scene.game.width/2 - (current.text.width/2)
+    },
+}
+
 const Cube = {
     color: 'rgba(255, 255, 255, 1)',
     tags: ['cube'],
     border: {
         size: 1,
-        color: '#000'
+        color: '#09090b'
     },
     range: {
         size: 12.5,
@@ -48,6 +117,7 @@ const Cube = {
         current.reset(current)
 
         current.scene.score += 1
+        current.scene.getGameObjectByName('score').text.value = current.scene.score
 
         const maxScore = localStorage.getItem('maxScore') || 0
 
@@ -65,24 +135,31 @@ const Cube = {
     }
 }
 
-const MainScene = {
+const GameScene = {
     score: 0,
     initialCubes: 3,
     maxCubes: 8,
+
+    gameObjects: {
+        score: Score
+    },
 
     onLoad: current => {
         for (let i = 0; i < current.initialCubes; i++) {
             current.instantGameObject(Cube)
         }
     },
+}
 
-    onUpdate: current => {
-
+const StartScene = {
+    gameObjects: {
+        maxScore: MaxScoreText,
+        start: StartText,
     },
 
-    onKeydown: ({event, current}) => {
-
-    },
+    onClick: ({current}) => {
+        current.game.changeScene('game')
+    }
 }
 
 let windowHeight = window.innerHeight
@@ -98,7 +175,8 @@ const game = new Game({
     height: windowHeight,
 
     scenes: {
-        main: MainScene
+        main: StartScene,
+        game: GameScene
     },
 
     onLoad: current => {

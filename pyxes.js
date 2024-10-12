@@ -144,6 +144,12 @@ class GameObject {
         if (!this.imageCache && this.image && this.image.src && this.image.src != '') {
             this.loadImageCache()
         }
+
+        if (this.text && this.text.value != undefined && this.text.value != '') {
+            this.scene.game.ctx.font = `${this.text.bold ? 'bold ' : ''}${this.text.italic ? 'italic ' : ''}${this.text.fontSize}px ${this.text.font}`;
+
+            this.text.width = this.scene.game.ctx.measureText(this.text.value).width
+        }
     }
 
     loadImageCache() {
@@ -163,9 +169,11 @@ class GameObject {
     render() {
         if (this.dontRenderIfNotVisible && !this.isVisible()) return
 
-        this.scene.game.ctx.fillStyle = this.color
+        if (this.color != 'transparent' && this.color != null && this.color != false) {
+            this.scene.game.ctx.fillStyle = this.color
 
-        this.scene.game.ctx.fillRect(this.x, this.y, this.width, this.height)
+            this.scene.game.ctx.fillRect(this.x, this.y, this.width, this.height)
+        }
 
         if (this.imageCache) {
             this.scene.game.ctx.save()
@@ -189,15 +197,18 @@ class GameObject {
             this.loadImageCache()
         }
 
-        if (this.text && this.text.value && this.text.value != '') {
-            this.scene.game.ctx.font = `${this.text.bold ? 'bold ' : ''}${this.text.italic ? 'italic ' : ''}${this.text.fontSize}px ${this.text.font}`;
-            this.scene.game.ctx.fillStyle = this.text.color;
-            this.scene.game.ctx.fillText(this.text.value, this.x + this.text.x, this.y + this.text.y + this.text.fontSize);
+        if (this.text && this.text.value != undefined && this.text.value != '') {
+            if (this.text.color != 'transparent' && this.text.color != null && this.text.color != false) {
+                this.scene.game.ctx.font = `${this.text.bold ? 'bold ' : ''}${this.text.italic ? 'italic ' : ''}${this.text.fontSize}px ${this.text.font}`;
+                this.scene.game.ctx.fillStyle = this.text.color;
+                this.scene.game.ctx.fillText(this.text.value, this.x + this.text.x, this.y + this.text.y + this.text.fontSize);
+                this.text.width = this.scene.game.ctx.measureText(this.text.value).width
 
-            if (this.text.stroke) {
-                this.scene.game.ctx.strokeStyle = this.text.strokeColor;
-                this.scene.game.ctx.lineWidth = this.text.lineWidth;
-                this.scene.game.ctx.strokeText(this.text.value, this.x + this.text.x, this.y + this.text.y + this.text.fontSize);
+                if (this.text.stroke && this.text.strokeColor != 'transparent' && this.text.strokeColor != null && this.text.strokeColor != false) {
+                    this.scene.game.ctx.strokeStyle = this.text.strokeColor;
+                    this.scene.game.ctx.lineWidth = this.text.lineWidth;
+                    this.scene.game.ctx.strokeText(this.text.value, this.x + this.text.x, this.y + this.text.y + this.text.fontSize);
+                }
             }
         }
     }
@@ -256,6 +267,16 @@ class GameObject {
             (this.y + this.height) > (this.scene.game.camera.y - this.scene.game.height/2) &&
             (this.y) < (this.scene.game.camera.y + this.scene.game.height/2)
         )
+    }
+
+    calcTextWidth() {
+        if (!this.text && this.text.value == undefined && this.text.value == '') {
+            this.text.width = 0
+            return
+        }
+
+        this.scene.game.ctx.font = `${this.text.bold ? 'bold ' : ''}${this.text.italic ? 'italic ' : ''}${this.text.fontSize}px ${this.text.font}`
+        this.text.width = this.scene.game.ctx.measureText(this.text.value).width
     }
 }
 
