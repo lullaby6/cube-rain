@@ -1,6 +1,7 @@
 const Score = {
     color: 'transparent',
     gui: true,
+    tags: ['gui'],
     z: 100,
     text: {
         value: '0',
@@ -21,6 +22,7 @@ const Score = {
 const StartText = {
     color: 'transparent',
     gui: true,
+    tags: ['gui'],
     z: 100,
     text: {
         value: 'Tap to start',
@@ -30,11 +32,6 @@ const StartText = {
     },
 
     onLoad: current => {
-        if (localStorage.hasOwnProperty('maxScore')) {
-            current.calcTextWidth()
-            // current.text.value += `Max Score: ${localStorage.getItem('maxScore')}`
-        }
-
         current.height = current.text.fontSize
         current.y = current.scene.game.height/2 - current.text.fontSize
 
@@ -45,6 +42,7 @@ const StartText = {
 
 const MaxScoreText = {
     color: 'transparent',
+    tags: ['gui'],
     gui: true,
     z: 100,
     text: {
@@ -87,7 +85,10 @@ const Cube = {
     onUpdate: current => {
         current.y += current.speed
 
-        if (current.y > current.scene.game.height) current.scene.game.resetScene()
+        if (current.y > current.scene.game.height) {
+            current.scene.game.resetScene()
+            current.scene.game.changeScene('main')
+        }
 
         current.drawBorder(current)
     },
@@ -185,6 +186,11 @@ const game = new Game({
             width = parseInt((9*windowHeight)/16)
 
             current.setSize(width, windowHeight)
+
+            current.getActiveScene().getGameObjectsByTag('gui').forEach(gui => {
+                gui.width = gui.text.width
+                gui.x = current.width/2 - (gui.text.width/2)
+            })
         })
     },
 
