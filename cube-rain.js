@@ -166,7 +166,7 @@ let windowHeight = window.innerHeight
 let width = (9*windowHeight)/16
 
 const game = new Game({
-    backgroundColor: '#FBFAFA',
+    backgroundColor: '#fff',
     fps: 60,
     limitFPS: true,
     // cursor: false,
